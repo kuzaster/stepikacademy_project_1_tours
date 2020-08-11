@@ -1,0 +1,17 @@
+asgiref==3.2.10
+automium==0.2.6
+automium-web==0.1.1
+click==7.1.2
+Django==3.1
+flake8==3.8.3
+Flask==1.1.2
+itsdangerous==1.1.0
+Jinja2==2.11.2
+legacy==0.1.6
+MarkupSafe==1.1.1
+mccabe==0.6.1
+pycodestyle==2.6.0
+pyflakes==2.2.0
+pytz==2020.1
+sqlparse==0.3.1
+Werkzeug==1.0.1
