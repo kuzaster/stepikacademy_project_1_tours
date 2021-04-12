@@ -1,6 +1,11 @@
-# from django.conf import settings
+import random
+
 from django.http import HttpResponseNotFound, HttpResponseServerError
 from django.shortcuts import render
+
+import data
+
+# Create your views here.
 
 
 def custom_handler404(request, exception):
@@ -12,29 +17,39 @@ def custom_handler500(request):
 
 
 def main_view(request):
-    return render(request, "tours/index.html")
+    keys = random.sample(list(data.tours), 6)
+    tours = {key: data.tours[key] for key in keys}
+    return render(request, "tours/index.html", {"data": data, "tours": tours})
 
 
 def departure_view(request, departure):
-    return render(request, "tours/departure.html")
+    tours = {
+        key: value
+        for key, value in data.tours.items()
+        if value["departure"] == departure
+    }
+    depart = data.departures[departure]
+    costs = sorted((tour["price"] for tour in tours.values()))
+    nights = sorted((tour["nights"] for tour in tours.values()))
+    return render(
+        request,
+        "tours/departure.html",
+        {
+            "tours": tours,
+            "data": data,
+            "departure": depart,
+            "costs": costs,
+            "nights": nights,
+        },
+    )
 
 
 def tour_view(request, id):
-    return render(request, "tours/tour.html")
-
-
-# class MainView(View):
-#     def get(self, request, *args, **kwargs):
-#         return render(request, 'tours/index.html')
-
-
-# class DepartureView(View):
-#     def get(self, request, *args, **kwargs):
-#         return render(request, 'tours/departure.html')
-
-
-# class TourView(View):
-#     def get(self, request, *args, **kwargs):
-#         return render(request, 'tours/tour.html')
-
-# Create your views here.
+    tour = data.tours[id]
+    departure = data.departures[tour["departure"]]
+    stars = "★" * int(tour["stars"])
+    return render(
+        request,
+        "tours/tour.html",
+        {"tour": tour, "departure": departure, "stars": stars, "data": data},
+    )
